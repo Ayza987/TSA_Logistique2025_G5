@@ -1,0 +1,25 @@
+name: CD - Production Deploy
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Déploiement prod backend 
+      - name: Build & push backend image
+        working-directory: backend
+        run: |
+          docker build -t myapp-backend:latest .
+          docker push ghcr.io/username/myapp-backend:latest
+
+      # Déploiement prod frontend 
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
