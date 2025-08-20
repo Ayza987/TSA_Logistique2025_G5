@@ -1,0 +1,24 @@
+name: CD - Staging Deploy
+
+on:
+  push:
+    branches: ["develop"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Build frontend
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
+
+      # Build backend Docker
+      - name: Build & push backend image
+        working-directory: backend
+        run: |
+          docker build -t myapp-backend:staging .
